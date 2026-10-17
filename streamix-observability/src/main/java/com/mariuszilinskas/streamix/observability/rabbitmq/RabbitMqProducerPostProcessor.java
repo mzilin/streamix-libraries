@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.observability.rabbit;
+package com.mariuszilinskas.streamix.observability.rabbitmq;
 
 import com.mariuszilinskas.streamix.observability.context.LogContext;
 import org.jspecify.annotations.NonNull;
@@ -7,7 +7,7 @@ import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
 
-public final class RabbitProducerPostProcessor implements MessagePostProcessor {
+public final class RabbitMqProducerPostProcessor implements MessagePostProcessor {
 
     @Override
     @NonNull

@@ -1,6 +1,6 @@
 package com.mariuszilinskas.streamix.observability.config;
 
-import com.mariuszilinskas.streamix.observability.filter.LoggingFilter;
+import com.mariuszilinskas.streamix.observability.logging.LoggingFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

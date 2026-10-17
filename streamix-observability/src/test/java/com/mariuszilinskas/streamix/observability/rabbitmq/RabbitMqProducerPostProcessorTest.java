@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.observability.rabbit;
+package com.mariuszilinskas.streamix.observability.rabbitmq;
 
 import com.mariuszilinskas.streamix.observability.context.LogContext;
 import org.junit.jupiter.api.AfterEach;
@@ -9,9 +9,9 @@ import org.springframework.amqp.core.MessageProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RabbitProducerPostProcessorTest {
+class RabbitMqProducerPostProcessorTest {
 
-    private final RabbitProducerPostProcessor postProcessor = new RabbitProducerPostProcessor();
+    private final RabbitMqProducerPostProcessor postProcessor = new RabbitMqProducerPostProcessor();
 
     @AfterEach
     void tearDown() {

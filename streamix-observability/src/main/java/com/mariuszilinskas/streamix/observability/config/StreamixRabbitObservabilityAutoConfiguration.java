@@ -1,7 +1,7 @@
 package com.mariuszilinskas.streamix.observability.config;
 
-import com.mariuszilinskas.streamix.observability.rabbit.RabbitConsumerInterceptor;
-import com.mariuszilinskas.streamix.observability.rabbit.RabbitProducerPostProcessor;
+import com.mariuszilinskas.streamix.observability.rabbitmq.RabbitConsumerInterceptor;
+import com.mariuszilinskas.streamix.observability.rabbitmq.RabbitMqProducerPostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -25,15 +25,15 @@ public class StreamixRabbitObservabilityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RabbitProducerPostProcessor rabbitProducerPostProcessor() {
-        return new RabbitProducerPostProcessor();
+    public RabbitMqProducerPostProcessor rabbitProducerPostProcessor() {
+        return new RabbitMqProducerPostProcessor();
     }
 
     @Bean
     @ConditionalOnBean(RabbitTemplate.class)
     public SmartInitializingSingleton rabbitProducerPostProcessorRegistrar(
             RabbitTemplate rabbitTemplate,
-            RabbitProducerPostProcessor postProcessor
+            RabbitMqProducerPostProcessor postProcessor
     ) {
         return () -> rabbitTemplate.addBeforePublishPostProcessors(postProcessor);
     }

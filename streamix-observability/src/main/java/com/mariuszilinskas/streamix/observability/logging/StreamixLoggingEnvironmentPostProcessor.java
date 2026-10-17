@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.observability.config;
+package com.mariuszilinskas.streamix.observability.logging;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.EnvironmentPostProcessor;

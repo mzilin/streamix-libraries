@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.observability.rabbit;
+package com.mariuszilinskas.streamix.observability.rabbitmq;
 
 import com.mariuszilinskas.streamix.observability.context.LogContext;
 import com.mariuszilinskas.streamix.observability.context.LogContextManager;
@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RabbitConsumerInterceptorTest {
+class RabbitMqConsumerInterceptorTest {
 
-    private final RabbitConsumerInterceptor interceptor = new RabbitConsumerInterceptor("test-service", "test");
+    private final RabbitMqConsumerInterceptor interceptor = new RabbitMqConsumerInterceptor("test-service", "test");
 
     @Mock
     private MethodInvocation invocation;

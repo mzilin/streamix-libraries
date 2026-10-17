@@ -1,7 +1,7 @@
 package com.mariuszilinskas.streamix.observability.config;
 
-import com.mariuszilinskas.streamix.observability.rabbit.RabbitConsumerInterceptor;
-import com.mariuszilinskas.streamix.observability.rabbit.RabbitProducerPostProcessor;
+import com.mariuszilinskas.streamix.observability.rabbitmq.RabbitConsumerInterceptor;
+import com.mariuszilinskas.streamix.observability.rabbitmq.RabbitMqProducerPostProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -18,7 +18,7 @@ class StreamixRabbitObservabilityAutoConfigurationTest {
     void registersBothBeans() {
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(RabbitConsumerInterceptor.class);
-            assertThat(context).hasSingleBean(RabbitProducerPostProcessor.class);
+            assertThat(context).hasSingleBean(RabbitMqProducerPostProcessor.class);
         });
     }
 
@@ -32,7 +32,7 @@ class StreamixRabbitObservabilityAutoConfigurationTest {
     @Test
     void doesNotRegisterProducerPostProcessorWhenUserProvidesOne() {
         contextRunner
-                .withBean(RabbitProducerPostProcessor.class, RabbitProducerPostProcessor::new)
-                .run(context -> assertThat(context).hasSingleBean(RabbitProducerPostProcessor.class));
+                .withBean(RabbitMqProducerPostProcessor.class, RabbitMqProducerPostProcessor::new)
+                .run(context -> assertThat(context).hasSingleBean(RabbitMqProducerPostProcessor.class));
     }
 }
