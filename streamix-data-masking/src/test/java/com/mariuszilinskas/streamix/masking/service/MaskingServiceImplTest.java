@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.masking;
+package com.mariuszilinskas.streamix.masking.service;
 
 import org.junit.jupiter.api.Test;
 

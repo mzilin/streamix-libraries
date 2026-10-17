@@ -1,5 +1,8 @@
 package com.mariuszilinskas.streamix.masking;
 
+import com.mariuszilinskas.streamix.masking.service.MaskingService;
+import com.mariuszilinskas.streamix.masking.service.MaskingServiceImpl;
+
 public final class Masking {
 
     private static final MaskingService SERVICE = new MaskingServiceImpl();

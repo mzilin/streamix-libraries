@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.masking;
+package com.mariuszilinskas.streamix.masking.service;
 
 public interface MaskingService {
     String maskFull(String value);
