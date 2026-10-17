@@ -1,6 +1,6 @@
 package com.mariuszilinskas.streamix.observability.config;
 
-import com.mariuszilinskas.streamix.observability.rabbitmq.RabbitConsumerInterceptor;
+import com.mariuszilinskas.streamix.observability.rabbitmq.RabbitMqConsumerInterceptor;
 import com.mariuszilinskas.streamix.observability.rabbitmq.RabbitMqProducerPostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -17,10 +17,10 @@ public class StreamixRabbitObservabilityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RabbitConsumerInterceptor rabbitConsumerInterceptor(Environment env) {
+    public RabbitMqConsumerInterceptor rabbitConsumerInterceptor(Environment env) {
         String serviceName = env.getProperty("spring.application.name", "");
         String environment = String.join(",", env.getActiveProfiles());
-        return new RabbitConsumerInterceptor(serviceName, environment);
+        return new RabbitMqConsumerInterceptor(serviceName, environment);
     }
 
     @Bean
