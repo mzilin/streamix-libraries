@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class CommonExceptionHandler {
+public abstract class CommonExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonExceptionHandler.class);
 
@@ -27,9 +27,8 @@ public class CommonExceptionHandler {
     public ResponseEntity<FieldErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new LinkedHashMap<>();
 
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.putIfAbsent(error.getField(), error.getDefaultMessage());
-        });
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
 
         return buildFieldErrorResponse(errors);
     }
@@ -58,7 +57,7 @@ public class CommonExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
-    private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
+    protected ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
         logErrorMessage(status, message);
         ErrorResponse errorResponse = new ErrorResponse(message, status.value(), status.getReasonPhrase());
         return ResponseEntity.status(status).body(errorResponse);
@@ -71,5 +70,4 @@ public class CommonExceptionHandler {
             logger.info("Status: {}, Message: '{}'", status.value(), message);
         }
     }
-
 }
