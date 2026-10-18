@@ -57,6 +57,11 @@ public abstract class CommonExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     protected ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
         logErrorMessage(status, message);
         ErrorResponse errorResponse = new ErrorResponse(message, status.value(), status.getReasonPhrase());
