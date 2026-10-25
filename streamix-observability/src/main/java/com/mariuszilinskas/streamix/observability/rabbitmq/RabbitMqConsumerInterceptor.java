@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.observability.rabbit;
+package com.mariuszilinskas.streamix.observability.rabbitmq;
 
 import com.mariuszilinskas.streamix.observability.context.LogContext;
 import com.mariuszilinskas.streamix.observability.context.LogContextManager;
@@ -11,12 +11,12 @@ import org.springframework.amqp.core.Message;
 
 import java.util.Map;
 
-public final class RabbitConsumerInterceptor implements MethodInterceptor {
+public final class RabbitMqConsumerInterceptor implements MethodInterceptor {
 
     private final String serviceName;
     private final String environment;
 
-    public RabbitConsumerInterceptor(String serviceName, String environment) {
+    public RabbitMqConsumerInterceptor(String serviceName, String environment) {
         this.serviceName = serviceName;
         this.environment = environment;
     }

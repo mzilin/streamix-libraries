@@ -3,6 +3,7 @@ package com.mariuszilinskas.streamix.web.constant;
 public final class ValidationMessages {
 
     private ValidationMessages() {
+        // Private constructor to prevent instantiation
     }
 
     public static final String CANNOT_BE_NULL = "cannot be null";

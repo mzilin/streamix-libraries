@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.observability.filter;
+package com.mariuszilinskas.streamix.observability.logging;
 
 import com.mariuszilinskas.streamix.observability.context.LogContext;
 import com.mariuszilinskas.streamix.observability.context.LogContextManager;

@@ -1,7 +1,7 @@
 package com.mariuszilinskas.streamix.masking.config;
 
-import com.mariuszilinskas.streamix.masking.MaskingServiceImpl;
-import com.mariuszilinskas.streamix.masking.MaskingService;
+import com.mariuszilinskas.streamix.masking.service.MaskingServiceImpl;
+import com.mariuszilinskas.streamix.masking.service.MaskingService;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

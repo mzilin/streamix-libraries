@@ -1,7 +1,7 @@
 package com.mariuszilinskas.streamix.masking.config;
 
-import com.mariuszilinskas.streamix.masking.MaskingServiceImpl;
-import com.mariuszilinskas.streamix.masking.MaskingService;
+import com.mariuszilinskas.streamix.masking.service.MaskingServiceImpl;
+import com.mariuszilinskas.streamix.masking.service.MaskingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;

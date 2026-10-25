@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.masking;
+package com.mariuszilinskas.streamix.masking.service;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

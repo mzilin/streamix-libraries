@@ -1,7 +1,7 @@
 package com.mariuszilinskas.streamix.observability.config;
 
 import com.mariuszilinskas.streamix.observability.context.LogContext;
-import com.mariuszilinskas.streamix.observability.filter.LoggingFilter;
+import com.mariuszilinskas.streamix.observability.logging.LoggingFilter;
 import jakarta.servlet.FilterChain;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
