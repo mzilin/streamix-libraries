@@ -2,6 +2,23 @@ name: Publish
 
 on:
   workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - streamix-cryptography
+          - streamix-data-masking
+          - streamix-messaging
+          - streamix-observability
+          - streamix-web-commons
+      version:
+        description: 'Version to publish (blank = build.gradle version)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -28,4 +45,15 @@ jobs:
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew publish --no-daemon
+        run: |
+          if [ "${{ inputs.package }}" = "all" ]; then
+            TASK="publish"
+          else
+            TASK=":${{ inputs.package }}:publish"
+          fi
+
+          if [ -n "${{ inputs.version }}" ]; then
+            ./gradlew $TASK -PreleaseVersion=${{ inputs.version }} --no-daemon
+          else
+            ./gradlew $TASK --no-daemon
+          fi
