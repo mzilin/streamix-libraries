@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.mariuszilinskas.streamix'
-version = '1.0.1'
+version = project.hasProperty('releaseVersion') ? project.releaseVersion : '1.0.1'
 
 allprojects {
     group = rootProject.group
