@@ -1,4 +1,4 @@
-rootProject.name = 'streamix-platform-libs'
+rootProject.name = 'streamix-libraries'
 
 include 'streamix-cryptography'
 include 'streamix-data-masking'

@@ -1,7 +1,7 @@
-# Streamix – Platform Libraries
+# Streamix – Shared Libraries
 
-![Build](https://img.shields.io/github/actions/workflow/status/mzilin/streamix-platform-libs/build.yml?label=Build&logo=github&logoColor=white&style=flat)
-![Coverage](https://img.shields.io/codecov/c/github/mzilin/streamix-platform-libs?label=Coverage&logo=codecov&logoColor=white&style=flat)
+![Build](https://img.shields.io/github/actions/workflow/status/mzilin/streamix-libraries/build.yml?label=Build&logo=github&logoColor=white&style=flat)
+![Coverage](https://img.shields.io/codecov/c/github/mzilin/streamix-libraries?label=Coverage&logo=codecov&logoColor=white&style=flat)
 ![Status](https://img.shields.io/badge/status-complete-brightgreen?label=Status)
 
 
@@ -137,8 +137,8 @@ No `@EnableXxx` annotation is required. `MaskingService` is registered automatic
 Inject `MaskingService` and call the appropriate method directly:
 
 ```java
-log.info("Registering user: {}", maskingService.maskEmail(email));
-log.info("Card: {}", maskingService.maskPartial(cardNumber));
+logger.info("Registering user: {}", maskingService.maskEmail(email));
+logger.info("Card: {}", maskingService.maskPartial(cardNumber));
 ```
 
 Or implement `Loggable` on a DTO to encapsulate the masking logic:
@@ -158,7 +158,7 @@ public record CreateUserRequest(String email, String phone) implements Loggable 
 }
 
 // in a service:
-log.info("Received: {}", request.getLoggable());
+logger.info("Received: {}", request.getLoggable());
 ```
 
 #### Overriding a bean
@@ -320,6 +320,7 @@ Maven Local publishes artifacts to `~/.m2/repository/` on your machine. It is us
 ./gradlew :streamix-cryptography:publishToMavenLocal
 ./gradlew :streamix-data-masking:publishToMavenLocal
 ./gradlew :streamix-observability:publishToMavenLocal
+./gradlew :streamix-messaging:publishToMavenLocal
 ./gradlew :streamix-web-commons:publishToMavenLocal
 ```
 
@@ -356,6 +357,7 @@ export GITHUB_TOKEN=<your-github-token>
 ./gradlew :streamix-cryptography:publishMavenJavaPublicationToGitHubPackagesRepository
 ./gradlew :streamix-data-masking:publishMavenJavaPublicationToGitHubPackagesRepository
 ./gradlew :streamix-observability:publishMavenJavaPublicationToGitHubPackagesRepository
+./gradlew :streamix-messaging:publishMavenJavaPublicationToGitHubPackagesRepository
 ./gradlew :streamix-web-commons:publishMavenJavaPublicationToGitHubPackagesRepository
 ```
 
@@ -366,7 +368,7 @@ export GITHUB_TOKEN=<your-github-token>
 ```groovy
 repositories {
     maven {
-        url = uri('https://maven.pkg.github.com/mzilin/streamix-platform-libs')
+        url = uri('https://maven.pkg.github.com/mzilin/streamix-libraries')
         credentials {
             username = System.getenv("GITHUB_ACTOR") ?: ""
             password = System.getenv("GITHUB_TOKEN") ?: ""
@@ -402,6 +404,7 @@ export CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token \
 ./gradlew :streamix-cryptography:publish
 ./gradlew :streamix-data-masking:publish
 ./gradlew :streamix-observability:publish
+./gradlew :streamix-messaging:publish
 ./gradlew :streamix-web-commons:publish
 ```
 
@@ -437,6 +440,7 @@ To run tests for a specific package:
 ./gradlew :streamix-cryptography:test
 ./gradlew :streamix-data-masking:test
 ./gradlew :streamix-observability:test
+./gradlew :streamix-messaging:test
 ./gradlew :streamix-web-commons:test
 ```
 
