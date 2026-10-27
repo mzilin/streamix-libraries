@@ -1,14 +1,21 @@
 dependencies {
+    // Spring Boot
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
-    implementation 'org.slf4j:slf4j-api'
 
+    // Logging
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.33.0-alpha'
+
+    // Optional framework integrations
     compileOnly 'org.jspecify:jspecify'
     compileOnly 'org.springframework:spring-web'
     compileOnly 'jakarta.servlet:jakarta.servlet-api'
     compileOnly 'io.grpc:grpc-api'
     compileOnly 'org.springframework.amqp:spring-rabbit'
     compileOnly 'org.springframework.boot:spring-boot-starter-kafka'
+    compileOnly 'ch.qos.logback:logback-classic'
 
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework:spring-webmvc'
     testImplementation 'jakarta.servlet:jakarta.servlet-api'
