@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Profile;
 @AutoConfiguration
 @ConditionalOnClass({OpenTelemetryAppender.class, LoggerContext.class, OpenTelemetry.class})
 @ConditionalOnBean(OpenTelemetry.class)
-@AutoConfigureAfter(name = "org.springframework.boot.actuate.autoconfigure.opentelemetry.OpenTelemetryAutoConfiguration")
+@AutoConfigureAfter(name = "org.springframework.boot.opentelemetry.autoconfigure.OpenTelemetrySdkAutoConfiguration")
 public class StreamixLoggingAutoConfiguration {
 
     @Bean(destroyMethod = "stop")

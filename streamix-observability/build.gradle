@@ -4,7 +4,7 @@ dependencies {
 
     // Logging
     implementation 'org.slf4j:slf4j-api'
-    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.33.0-alpha'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.28.1-alpha'
 
     // Optional framework integrations
     compileOnly 'org.jspecify:jspecify'
