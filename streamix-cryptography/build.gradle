@@ -1,11 +1,15 @@
 dependencies {
+    // Spring Boot
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
 
+    // AWS
     implementation platform('software.amazon.awssdk:bom:2.29.52')
     implementation 'software.amazon.awssdk:kms'
 
+    // Configuration
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

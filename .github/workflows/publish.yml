@@ -4,17 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: 'Package to publish'
-        required: true
+        description: 'Package to publish (leave blank or "all" to publish all)'
+        required: false
         default: 'all'
-        type: choice
-        options:
-          - all
-          - streamix-cryptography
-          - streamix-data-masking
-          - streamix-messaging
-          - streamix-observability
-          - streamix-web-commons
+        type: string
       version:
         description: 'Version to publish (blank = build.gradle version)'
         required: false
