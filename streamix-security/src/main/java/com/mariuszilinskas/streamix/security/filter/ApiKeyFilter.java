@@ -29,7 +29,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String providedKey = request.getHeader(API_KEY_HEADER);
 
-        if (!isValidApiKey(providedKey)) {
+        if (providedKey == null || !isValidApiKey(providedKey)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
