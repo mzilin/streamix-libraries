@@ -18,6 +18,7 @@ For a complete system overview and links to all microservices, please refer to t
   * [streamix-cryptography](#streamix-cryptography)
   * [streamix-data-masking](#streamix-data-masking)
   * [streamix-observability](#streamix-observability)
+  * [streamix-security](#streamix-security)
   * [streamix-web-commons](#streamix-web-commons)
 * [Publishing Packages](#publishing-packages)
   * [Publish to Maven Local](#publish-to-maven-local)
@@ -213,6 +214,75 @@ All beans are guarded with `@ConditionalOnMissingBean`. Register your own bean o
 
 ---
 
+### streamix-security
+
+Shared library that enforces API key authentication for inbound requests and provides a service for attaching API keys to outbound requests across all Streamix microservices.
+
+**Artifact:**
+```groovy
+implementation 'com.mariuszilinskas.streamix:streamix-security'
+```
+
+No `@EnableXxx` annotation is required. Both beans are registered automatically on startup.
+
+#### What activates automatically
+
+| Bean                   | Purpose                                                              |
+|------------------------|----------------------------------------------------------------------|
+| `ApiKeyFilter`         | Validates the `X-API-Key` header on every inbound HTTP request       |
+| `OutboundApiKeyService` | Attaches the correct `X-API-Key` header to outbound HTTP requests   |
+
+#### Configuration
+
+```yaml
+security:
+  inbound-keys:
+    gateway: ${GATEWAY_API_KEY}       # named inbound clients
+  outbound-keys:
+    service-b: ${SERVICE_B_API_KEY}   # named outbound services
+```
+
+Each key in `inbound-keys` represents a named caller (e.g. `gateway`). `ApiKeyFilter` accepts a request if its `X-API-Key` header value matches any configured inbound key. Requests with a missing or unrecognised key are rejected with `401 Unauthorized`.
+
+#### Usage
+
+Inject `OutboundApiKeyService` and use either method:
+
+| Method                                      | Purpose                                           |
+|---------------------------------------------|---------------------------------------------------|
+| `apply(String serviceName, HttpHeaders headers)` | Looks up the key and sets the `X-API-Key` header |
+| `getApiKey(String serviceName)`             | Returns the raw key for custom header handling    |
+
+Both methods throw `IllegalStateException` if no key is configured for the given service name.
+
+```java
+@Service
+public class UserServiceClient {
+
+    private final RestClient restClient;
+    private final OutboundApiKeyService apiKeyService;
+
+    public UserServiceClient(RestClient restClient, OutboundApiKeyService apiKeyService) {
+        this.restClient = restClient;
+        this.apiKeyService = apiKeyService;
+    }
+
+    public UserResponse getUser(String userId) {
+        return restClient.get()
+                .uri("/users/{id}", userId)
+                .headers(headers -> apiKeyService.apply("user-service", headers))
+                .retrieve()
+                .body(UserResponse.class);
+    }
+}
+```
+
+#### Overriding a bean
+
+`ApiKeyFilter` is guarded with `@ConditionalOnMissingBean(ApiKeyFilter.class)`. The default `OutboundApiKeyService` implementation (`OutboundApiKeyServiceImpl`) is guarded with `@ConditionalOnMissingBean` on its concrete type. To replace it, register your own `OutboundApiKeyServiceImpl` bean.
+
+---
+
 ### streamix-web-commons
 
 Shared library that provides standardised HTTP error response DTOs, validation message constants, and utilities for consistent error handling across all Streamix microservices.
@@ -240,15 +310,15 @@ Use `ErrorResponse` and `FieldErrorResponse` in global exception handlers (`@Res
 public ResponseEntity<ErrorResponse> handleNotFound(
         ResourceNotFoundException ex
 ) {
-    var body = new ErrorResponse(
-            ex.getMessage(),
-            HttpStatus.NOT_FOUND.value(),
-            "Not Found"
-    );
+  var body = new ErrorResponse(
+          ex.getMessage(),
+          HttpStatus.NOT_FOUND.value(),
+          "Not Found"
+  );
 
-    return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(body);
+  return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(body);
 }
 ```
 
@@ -259,23 +329,23 @@ For validation failures, use `FieldErrorResponse` to surface per-field errors:
 public ResponseEntity<FieldErrorResponse> handleValidation(
         MethodArgumentNotValidException ex
 ) {
-    Map<String, String> fieldErrors = ex.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .collect(Collectors.toMap(
-                    FieldError::getField,
-                    FieldError::getDefaultMessage
-            ));
+  Map<String, String> fieldErrors = ex.getBindingResult()
+          .getFieldErrors()
+          .stream()
+          .collect(Collectors.toMap(
+                  FieldError::getField,
+                  FieldError::getDefaultMessage
+          ));
 
-    var body = new FieldErrorResponse(
-            fieldErrors,
-            HttpStatus.BAD_REQUEST.value(),
-            "Bad Request"
-    );
+  var body = new FieldErrorResponse(
+          fieldErrors,
+          HttpStatus.BAD_REQUEST.value(),
+          "Bad Request"
+  );
 
-    return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(body);
+  return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(body);
 }
 ```
 
@@ -320,7 +390,7 @@ Maven Local publishes artifacts to `~/.m2/repository/` on your machine. It is us
 ./gradlew :streamix-cryptography:publishToMavenLocal
 ./gradlew :streamix-data-masking:publishToMavenLocal
 ./gradlew :streamix-observability:publishToMavenLocal
-./gradlew :streamix-messaging:publishToMavenLocal
+./gradlew :streamix-security:publishToMavenLocal
 ./gradlew :streamix-web-commons:publishToMavenLocal
 ```
 
@@ -328,8 +398,8 @@ To consume a locally published artifact in another service, add `mavenLocal()` t
 
 ```groovy
 repositories {
-    mavenLocal()
-    mavenCentral()
+  mavenLocal()
+  mavenCentral()
 }
 ```
 
@@ -357,7 +427,7 @@ export GITHUB_TOKEN=<your-github-token>
 ./gradlew :streamix-cryptography:publishMavenJavaPublicationToGitHubPackagesRepository
 ./gradlew :streamix-data-masking:publishMavenJavaPublicationToGitHubPackagesRepository
 ./gradlew :streamix-observability:publishMavenJavaPublicationToGitHubPackagesRepository
-./gradlew :streamix-messaging:publishMavenJavaPublicationToGitHubPackagesRepository
+./gradlew :streamix-security:publishMavenJavaPublicationToGitHubPackagesRepository
 ./gradlew :streamix-web-commons:publishMavenJavaPublicationToGitHubPackagesRepository
 ```
 
@@ -367,14 +437,14 @@ export GITHUB_TOKEN=<your-github-token>
 
 ```groovy
 repositories {
-    maven {
-        url = uri('https://maven.pkg.github.com/mzilin/streamix-libraries')
-        credentials {
-            username = System.getenv("GITHUB_ACTOR") ?: ""
-            password = System.getenv("GITHUB_TOKEN") ?: ""
-        }
+  maven {
+    url = uri('https://maven.pkg.github.com/mzilin/streamix-libraries')
+    credentials {
+      username = System.getenv("GITHUB_ACTOR") ?: ""
+      password = System.getenv("GITHUB_TOKEN") ?: ""
     }
-    mavenCentral()
+  }
+  mavenCentral()
 }
 ```
 
@@ -404,7 +474,7 @@ export CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token \
 ./gradlew :streamix-cryptography:publish
 ./gradlew :streamix-data-masking:publish
 ./gradlew :streamix-observability:publish
-./gradlew :streamix-messaging:publish
+./gradlew :streamix-security:publish
 ./gradlew :streamix-web-commons:publish
 ```
 
@@ -414,14 +484,14 @@ export CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token \
 
 ```groovy
 repositories {
-    maven {
-        url = uri(System.getenv("CODE_ARTIFACT_URL") ?: "")
-        credentials {
-            username = "aws"
-            password = System.getenv("CODE_ARTIFACT_TOKEN") ?: ""
-        }
+  maven {
+    url = uri(System.getenv("CODE_ARTIFACT_URL") ?: "")
+    credentials {
+      username = "aws"
+      password = System.getenv("CODE_ARTIFACT_TOKEN") ?: ""
     }
-    mavenCentral()
+  }
+  mavenCentral()
 }
 ```
 
@@ -440,7 +510,7 @@ To run tests for a specific package:
 ./gradlew :streamix-cryptography:test
 ./gradlew :streamix-data-masking:test
 ./gradlew :streamix-observability:test
-./gradlew :streamix-messaging:test
+./gradlew :streamix-security:test
 ./gradlew :streamix-web-commons:test
 ```
 
