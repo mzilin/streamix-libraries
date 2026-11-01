@@ -2,7 +2,7 @@ package com.mariuszilinskas.streamix.security.config;
 
 import com.mariuszilinskas.streamix.security.filter.ApiKeyFilter;
 import com.mariuszilinskas.streamix.security.properties.SecurityProperties;
-import com.mariuszilinskas.streamix.security.service.OutboundApiKeyService;
+import com.mariuszilinskas.streamix.security.service.OutboundApiKeyServiceImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,8 +20,8 @@ public class StreamixSecurityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OutboundApiKeyService outboundApiKeyService(SecurityProperties securityProperties) {
-        return new OutboundApiKeyService(securityProperties);
+    public OutboundApiKeyServiceImpl outboundApiKeyService(SecurityProperties securityProperties) {
+        return new OutboundApiKeyServiceImpl(securityProperties);
     }
 
 }
