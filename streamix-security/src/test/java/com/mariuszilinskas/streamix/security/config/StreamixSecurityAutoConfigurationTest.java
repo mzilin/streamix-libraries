@@ -1,6 +1,8 @@
 package com.mariuszilinskas.streamix.security.config;
 
 import com.mariuszilinskas.streamix.security.filter.ApiKeyFilter;
+import com.mariuszilinskas.streamix.security.properties.SecurityProperties;
+import com.mariuszilinskas.streamix.security.service.OutboundApiKeyServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
@@ -13,14 +15,14 @@ class StreamixSecurityAutoConfigurationTest {
             .withConfiguration(AutoConfigurations.of(StreamixSecurityAutoConfiguration.class));
 
     @Test
-    void registersApiKeyFilterWhenClientKeysAreConfigured() {
+    void registersApiKeyFilterWhenInboundKeysAreConfigured() {
         contextRunner
-                .withPropertyValues("security.client-keys.gateway=dummy-api-key")
+                .withPropertyValues("security.inbound-keys.gateway=dummy-api-key")
                 .run(context -> assertThat(context).hasSingleBean(ApiKeyFilter.class));
     }
 
     @Test
-    void registersApiKeyFilterWhenNoClientKeysAreConfigured() {
+    void registersApiKeyFilterWhenNoInboundKeysAreConfigured() {
         contextRunner
                 .run(context -> assertThat(context).hasSingleBean(ApiKeyFilter.class));
     }
@@ -28,9 +30,30 @@ class StreamixSecurityAutoConfigurationTest {
     @Test
     void doesNotRegisterApiKeyFilterWhenBeanAlreadyExists() {
         contextRunner
-                .withPropertyValues("security.client-keys.gateway=dummy-api-key")
-                .withBean(ApiKeyFilter.class, () -> new ApiKeyFilter(new com.mariuszilinskas.streamix.security.properties.SecurityProperties(null)))
+                .withPropertyValues("security.inbound-keys.gateway=dummy-api-key")
+                .withBean(ApiKeyFilter.class, () -> new ApiKeyFilter(new SecurityProperties(null, null)))
                 .run(context -> assertThat(context).hasSingleBean(ApiKeyFilter.class));
+    }
+
+    @Test
+    void registersOutboundApiKeyServiceWhenOutboundKeysAreConfigured() {
+        contextRunner
+                .withPropertyValues("security.outbound-keys.service-b=dummy-outbound-key")
+                .run(context -> assertThat(context).hasSingleBean(OutboundApiKeyServiceImpl.class));
+    }
+
+    @Test
+    void registersOutboundApiKeyServiceWhenNoOutboundKeysAreConfigured() {
+        contextRunner
+                .run(context -> assertThat(context).hasSingleBean(OutboundApiKeyServiceImpl.class));
+    }
+
+    @Test
+    void doesNotRegisterOutboundApiKeyServiceWhenBeanAlreadyExists() {
+        contextRunner
+                .withPropertyValues("security.outbound-keys.service-b=dummy-outbound-key")
+                .withBean(OutboundApiKeyServiceImpl.class, () -> new OutboundApiKeyServiceImpl(new SecurityProperties(null, null)))
+                .run(context -> assertThat(context).hasSingleBean(OutboundApiKeyServiceImpl.class));
     }
 
 }
