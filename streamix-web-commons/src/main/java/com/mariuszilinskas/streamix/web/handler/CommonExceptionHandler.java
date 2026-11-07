@@ -7,6 +7,7 @@ import com.mariuszilinskas.streamix.web.response.error.ErrorResponse;
 import com.mariuszilinskas.streamix.web.response.error.FieldErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -59,20 +60,38 @@ public abstract class CommonExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return buildErrorResponse("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR, ex);
     }
 
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleOptimisticLocking(OptimisticLockingFailureException ex) {
+        return buildErrorResponse(
+                "The resource was modified by another request. Please retry.",
+                HttpStatus.CONFLICT,
+                ex
+        );
+    }
+
+    // --------------------- Response Builders --------------------
+
     protected ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
-        logErrorMessage(status, message);
+        return buildErrorResponse(message, status, null);
+    }
+
+    protected ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status, Exception ex) {
+        logErrorMessage(status, message, ex);
         ErrorResponse errorResponse = new ErrorResponse(message, status.value(), status.getReasonPhrase());
         return ResponseEntity.status(status).body(errorResponse);
     }
 
-    private void logErrorMessage(HttpStatus status, String message) {
+    // --------------------- Logging ------------------------------
+
+    private void logErrorMessage(HttpStatus status, String message, Exception ex) {
         if (status.is5xxServerError()) {
-            logger.error("Status: {}, Message: '{}'", status.value(), message);
+            logger.error("Status: {}, Message: '{}'", status.value(), message, ex);
         } else {
             logger.info("Status: {}, Message: '{}'", status.value(), message);
         }
     }
+
 }

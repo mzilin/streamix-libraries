@@ -3,6 +3,7 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-web'
 
     // Optional framework integrations
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'com.fasterxml.jackson.core:jackson-annotations'
     compileOnly 'org.projectlombok:lombok'
 
