@@ -102,7 +102,8 @@ public abstract class CommonExceptionHandler {
 
     @ExceptionHandler(DownstreamServiceException.class)
     public ResponseEntity<ErrorResponse> handleDownstreamServiceException(DownstreamServiceException ex) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, ex);
+        logger.error("Downstream service '{}' returned an unexpected error", ex.getServiceName(), ex);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(OptimisticLockingFailureException.class)
