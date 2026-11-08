@@ -1,5 +1,6 @@
 package com.mariuszilinskas.streamix.web.handler;
 
+import com.mariuszilinskas.streamix.web.exception.DownstreamServiceException;
 import com.mariuszilinskas.streamix.web.exception.EntityExistsException;
 import com.mariuszilinskas.streamix.web.exception.EntityLimitExceededException;
 import com.mariuszilinskas.streamix.web.exception.ResourceNotFoundException;
@@ -99,6 +100,11 @@ public abstract class CommonExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(DownstreamServiceException.class)
+    public ResponseEntity<ErrorResponse> handleDownstreamServiceException(DownstreamServiceException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, ex);
+    }
+
     @ExceptionHandler(OptimisticLockingFailureException.class)
     public ResponseEntity<ErrorResponse> handleOptimisticLocking(
             OptimisticLockingFailureException ex
@@ -114,11 +120,7 @@ public abstract class CommonExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(Exception ex) {
-        return buildErrorResponse(
-                "An unexpected error occurred.",
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                ex
-        );
+        return buildErrorResponse("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR, ex);
     }
 
     // --------------------- Response Builders --------------------
