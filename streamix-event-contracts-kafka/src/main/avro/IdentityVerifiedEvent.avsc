@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "IdentityVerifiedEvent",
+  "namespace": "com.mariuszilinskas.streamix",
+  "fields": [
+    {"name": "eventId",      "type": {"type": "string", "logicalType": "uuid"}},
+    {"name": "eventVersion", "type": "string"},
+    {"name": "occurredAt",   "type": {"type": "long",   "logicalType": "timestamp-millis"}},
+    {"name": "userId",       "type": {"type": "string", "logicalType": "uuid"}},
+    {"name": "email",        "type": "string"}
+  ]
+}

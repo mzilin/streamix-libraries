@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "UserRegisteredEvent",
+  "namespace": "com.mariuszilinskas.streamix",
+  "fields": [
+    {"name": "eventId",      "type": {"type": "string", "logicalType": "uuid"}},
+    {"name": "eventVersion", "type": "string"},
+    {"name": "occurredAt",   "type": {"type": "long",   "logicalType": "timestamp-millis"}},
+    {"name": "userId",       "type": {"type": "string", "logicalType": "uuid"}},
+    {"name": "email",        "type": "string"},
+    {"name": "firstName",    "type": "string"},
+    {"name": "lastName",     "type": "string"},
+    {"name": "country",      "type": "string"}
+  ]
+}
