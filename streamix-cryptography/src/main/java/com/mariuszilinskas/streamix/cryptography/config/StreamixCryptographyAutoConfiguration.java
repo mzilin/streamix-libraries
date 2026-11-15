@@ -1,8 +1,10 @@
 package com.mariuszilinskas.streamix.cryptography.config;
 
+import com.mariuszilinskas.streamix.cryptography.hashing.HmacSha256HashService;
 import com.mariuszilinskas.streamix.cryptography.kms.KmsFieldEncryptionServiceImpl;
 import com.mariuszilinskas.streamix.cryptography.local.LocalKeyFieldEncryptionServiceImpl;
 import com.mariuszilinskas.streamix.cryptography.properties.CryptographyProperties;
+import com.mariuszilinskas.streamix.cryptography.service.DeterministicHashService;
 import com.mariuszilinskas.streamix.cryptography.service.FieldEncryptionService;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -40,5 +42,12 @@ public class StreamixCryptographyAutoConfiguration {
             CryptographyProperties properties
     ) {
         return new KmsFieldEncryptionServiceImpl(kmsClient, properties.kmsKeyId());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(DeterministicHashService.class)
+    @ConditionalOnProperty(prefix = "cryptography", name = "hmac-key")
+    public DeterministicHashService blindIndexService(CryptographyProperties properties) {
+        return new HmacSha256HashService(properties.hmacKey());
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record CryptographyProperties(
         String provider,
         String encryptionKey,
+        String hmacKey,
         String kmsKeyId,
         String awsRegion
 ) {}
