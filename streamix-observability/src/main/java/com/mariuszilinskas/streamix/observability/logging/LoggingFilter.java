@@ -31,17 +31,19 @@ public final class LoggingFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String correlationId = LogContextManager.resolveCorrelationId(request.getHeader(LogContext.CORRELATION_HEADER));
+        String correlationId = LogContextManager.resolveCorrelationId(
+                request.getHeader(LogContext.CORRELATION_ID_HEADER)
+        );
         String userId = request.getHeader(LogContext.USER_ID_HEADER);
 
         Map<String, String> previousContext = MDC.getCopyOfContextMap();
 
         try {
-            LogContextManager.put(LogContext.CORRELATION_ID, correlationId);
-            LogContextManager.put(LogContext.USER_ID, userId);
-            LogContextManager.put(LogContext.SERVICE, serviceName);
-            LogContextManager.put(LogContext.ENVIRONMENT, environment);
-            response.setHeader(LogContext.CORRELATION_HEADER, correlationId);
+            LogContextManager.put(LogContext.MDC_CORRELATION_ID, correlationId);
+            LogContextManager.put(LogContext.MDC_USER_ID, userId);
+            LogContextManager.put(LogContext.MDC_SERVICE, serviceName);
+            LogContextManager.put(LogContext.MDC_ENVIRONMENT, environment);
+            response.setHeader(LogContext.CORRELATION_ID_HEADER, correlationId);
             filterChain.doFilter(request, response);
         } finally {
             restoreContext(previousContext);

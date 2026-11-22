@@ -22,13 +22,13 @@ class KafkaProducerInterceptorTest {
 
     @Test
     void writesMdcValuesToRecordHeaders() {
-        MDC.put(LogContext.CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-        MDC.put(LogContext.USER_ID, "user-6");
+        MDC.put(LogContext.MDC_CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        MDC.put(LogContext.MDC_USER_ID, "user-6");
 
         ProducerRecord<Object, Object> record = new ProducerRecord<>("topic", "value");
         ProducerRecord<Object, Object> result = interceptor.onSend(record);
 
-        assertThat(headerValue(result, LogContext.CORRELATION_HEADER))
+        assertThat(headerValue(result, LogContext.CORRELATION_ID_HEADER))
                 .isEqualTo("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
         assertThat(headerValue(result, LogContext.USER_ID_HEADER)).isEqualTo("user-6");
     }
@@ -38,13 +38,13 @@ class KafkaProducerInterceptorTest {
         ProducerRecord<Object, Object> record = new ProducerRecord<>("topic", "value");
         ProducerRecord<Object, Object> result = interceptor.onSend(record);
 
-        assertThat(result.headers().lastHeader(LogContext.CORRELATION_HEADER)).isNull();
+        assertThat(result.headers().lastHeader(LogContext.CORRELATION_ID_HEADER)).isNull();
         assertThat(result.headers().lastHeader(LogContext.USER_ID_HEADER)).isNull();
     }
 
     @Test
     void returnsOriginalRecordInstance() {
-        MDC.put(LogContext.CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        MDC.put(LogContext.MDC_CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
         ProducerRecord<Object, Object> record = new ProducerRecord<>("topic", "value");
 
         assertThat(interceptor.onSend(record)).isSameAs(record);

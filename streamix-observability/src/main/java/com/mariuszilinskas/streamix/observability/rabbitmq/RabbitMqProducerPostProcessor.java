@@ -12,11 +12,11 @@ public final class RabbitMqProducerPostProcessor implements MessagePostProcessor
     @Override
     @NonNull
     public Message postProcessMessage(@NonNull Message message) throws AmqpException {
-        String correlationId = MDC.get(LogContext.CORRELATION_ID);
-        String userId = MDC.get(LogContext.USER_ID);
+        String correlationId = MDC.get(LogContext.MDC_CORRELATION_ID);
+        String userId = MDC.get(LogContext.MDC_USER_ID);
 
         if (correlationId != null) {
-            message.getMessageProperties().setHeader(LogContext.CORRELATION_HEADER, correlationId);
+            message.getMessageProperties().setHeader(LogContext.CORRELATION_ID_HEADER, correlationId);
         }
         if (userId != null) {
             message.getMessageProperties().setHeader(LogContext.USER_ID_HEADER, userId);

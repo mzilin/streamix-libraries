@@ -14,11 +14,14 @@ public final class KafkaProducerInterceptor implements ProducerInterceptor<Objec
     @Override
     @NonNull
     public ProducerRecord<Object, Object> onSend(@NonNull ProducerRecord<Object, Object> record) {
-        String correlationId = MDC.get(LogContext.CORRELATION_ID);
-        String userId = MDC.get(LogContext.USER_ID);
+        String correlationId = MDC.get(LogContext.MDC_CORRELATION_ID);
+        String userId = MDC.get(LogContext.MDC_USER_ID);
 
         if (correlationId != null) {
-            record.headers().add(LogContext.CORRELATION_HEADER, correlationId.getBytes(StandardCharsets.UTF_8));
+            record.headers().add(
+                    LogContext.CORRELATION_ID_HEADER,
+                    correlationId.getBytes(StandardCharsets.UTF_8)
+            );
         }
         if (userId != null) {
             record.headers().add(LogContext.USER_ID_HEADER, userId.getBytes(StandardCharsets.UTF_8));

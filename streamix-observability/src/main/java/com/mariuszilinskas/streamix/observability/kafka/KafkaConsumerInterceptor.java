@@ -34,14 +34,14 @@ public final class KafkaConsumerInterceptor implements RecordInterceptor<Object,
         previousContextHolder.set(MDC.getCopyOfContextMap());
 
         String correlationId = LogContextManager.resolveCorrelationId(
-                headerValue(record, LogContext.CORRELATION_HEADER)
+                headerValue(record, LogContext.CORRELATION_ID_HEADER)
         );
         String userId = headerValue(record, LogContext.USER_ID_HEADER);
 
-        LogContextManager.put(LogContext.CORRELATION_ID, correlationId);
-        LogContextManager.put(LogContext.USER_ID, userId);
-        LogContextManager.put(LogContext.SERVICE, serviceName);
-        LogContextManager.put(LogContext.ENVIRONMENT, environment);
+        LogContextManager.put(LogContext.MDC_CORRELATION_ID, correlationId);
+        LogContextManager.put(LogContext.MDC_USER_ID, userId);
+        LogContextManager.put(LogContext.MDC_SERVICE, serviceName);
+        LogContextManager.put(LogContext.MDC_ENVIRONMENT, environment);
 
         return record;
     }

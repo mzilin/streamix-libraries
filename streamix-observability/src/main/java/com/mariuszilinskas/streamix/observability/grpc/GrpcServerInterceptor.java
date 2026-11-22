@@ -35,10 +35,10 @@ public final class GrpcServerInterceptor implements ServerInterceptor {
         String userId = inboundHeaders.get(USER_ID_KEY);
 
         Map<String, String> previousContext = MDC.getCopyOfContextMap();
-        LogContextManager.put(LogContext.CORRELATION_ID, correlationId);
-        LogContextManager.put(LogContext.USER_ID, userId);
-        LogContextManager.put(LogContext.SERVICE, serviceName);
-        LogContextManager.put(LogContext.ENVIRONMENT, environment);
+        LogContextManager.put(LogContext.MDC_CORRELATION_ID, correlationId);
+        LogContextManager.put(LogContext.MDC_USER_ID, userId);
+        LogContextManager.put(LogContext.MDC_SERVICE, serviceName);
+        LogContextManager.put(LogContext.MDC_ENVIRONMENT, environment);
 
         ServerCall<ReqT, RespT> wrappedCall = new ForwardingServerCall.SimpleForwardingServerCall<>(call) {
             @Override

@@ -34,7 +34,7 @@ class RabbitMqConsumerInterceptorTest {
     void extractsCorrelationIdAndUserIdFromMessageHeaders() throws Throwable {
         String correlationId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
         MessageProperties props = new MessageProperties();
-        props.setHeader(LogContext.CORRELATION_HEADER, correlationId);
+        props.setHeader(LogContext.CORRELATION_ID_HEADER, correlationId);
         props.setHeader(LogContext.USER_ID_HEADER, "user-5");
         Message message = new Message(new byte[0], props);
 
@@ -42,8 +42,8 @@ class RabbitMqConsumerInterceptorTest {
         AtomicReference<String> capturedUser = new AtomicReference<>();
         when(invocation.getArguments()).thenReturn(new Object[]{message});
         when(invocation.proceed()).thenAnswer(inv -> {
-            capturedCorrelation.set(MDC.get(LogContext.CORRELATION_ID));
-            capturedUser.set(MDC.get(LogContext.USER_ID));
+            capturedCorrelation.set(MDC.get(LogContext.MDC_CORRELATION_ID));
+            capturedUser.set(MDC.get(LogContext.MDC_USER_ID));
             return null;
         });
 
@@ -60,7 +60,7 @@ class RabbitMqConsumerInterceptorTest {
 
         when(invocation.getArguments()).thenReturn(new Object[]{message});
         when(invocation.proceed()).thenAnswer(inv -> {
-            capturedCorrelation.set(MDC.get(LogContext.CORRELATION_ID));
+            capturedCorrelation.set(MDC.get(LogContext.MDC_CORRELATION_ID));
             return null;
         });
 
@@ -79,8 +79,8 @@ class RabbitMqConsumerInterceptorTest {
 
         interceptor.invoke(invocation);
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
-        assertThat(MDC.get(LogContext.USER_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_USER_ID)).isNull();
         assertThat(MDC.get("pre-existing")).isEqualTo("value");
     }
 
@@ -96,7 +96,7 @@ class RabbitMqConsumerInterceptorTest {
         } catch (RuntimeException ignored) {
         }
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
         assertThat(MDC.get("pre-existing")).isEqualTo("value");
     }
 }

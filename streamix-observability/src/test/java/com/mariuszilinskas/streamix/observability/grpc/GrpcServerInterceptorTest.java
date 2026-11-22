@@ -52,7 +52,7 @@ class GrpcServerInterceptorTest {
 
         interceptor.interceptCall(serverCall, headers, next);
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isEqualTo(correlationId);
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isEqualTo(correlationId);
     }
 
     @Test
@@ -61,7 +61,7 @@ class GrpcServerInterceptorTest {
 
         interceptor.interceptCall(serverCall, headers, next);
 
-        String correlationId = MDC.get(LogContext.CORRELATION_ID);
+        String correlationId = MDC.get(LogContext.MDC_CORRELATION_ID);
         assertThat(correlationId).isNotNull();
         assertThat(LogContextManager.isValidCorrelationId(correlationId)).isTrue();
     }
@@ -73,7 +73,7 @@ class GrpcServerInterceptorTest {
 
         interceptor.interceptCall(serverCall, headers, next);
 
-        assertThat(MDC.get(LogContext.USER_ID)).isEqualTo("user-99");
+        assertThat(MDC.get(LogContext.MDC_USER_ID)).isEqualTo("user-99");
     }
 
     @Test
@@ -103,7 +103,7 @@ class GrpcServerInterceptorTest {
         ServerCall.Listener<Object> wrappedListener = interceptor.interceptCall(serverCall, headers, next);
         wrappedListener.onComplete();
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
         assertThat(MDC.get("pre-existing")).isEqualTo("value");
     }
 
@@ -115,7 +115,7 @@ class GrpcServerInterceptorTest {
         ServerCall.Listener<Object> wrappedListener = interceptor.interceptCall(serverCall, headers, next);
         wrappedListener.onCancel();
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
         assertThat(MDC.get("pre-existing")).isEqualTo("value");
     }
 }

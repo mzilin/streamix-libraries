@@ -19,8 +19,8 @@ public final class GrpcClientInterceptor implements ClientInterceptor {
             CallOptions callOptions,
             Channel next
     ) {
-        String correlationId = MDC.get(LogContext.CORRELATION_ID);
-        String userId = MDC.get(LogContext.USER_ID);
+        String correlationId = MDC.get(LogContext.MDC_CORRELATION_ID);
+        String userId = MDC.get(LogContext.MDC_USER_ID);
 
         return new ForwardingClientCall.SimpleForwardingClientCall<>(next.newCall(method, callOptions)) {
             @Override

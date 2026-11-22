@@ -34,7 +34,7 @@ class KafkaConsumerInterceptorTest {
     private ConsumerRecord<Object, Object> recordWithHeaders(String correlationId, String userId) {
         RecordHeaders headers = new RecordHeaders();
         if (correlationId != null) {
-            headers.add(LogContext.CORRELATION_HEADER, correlationId.getBytes(StandardCharsets.UTF_8));
+            headers.add(LogContext.CORRELATION_ID_HEADER, correlationId.getBytes(StandardCharsets.UTF_8));
         }
         if (userId != null) {
             headers.add(LogContext.USER_ID_HEADER, userId.getBytes(StandardCharsets.UTF_8));
@@ -51,8 +51,8 @@ class KafkaConsumerInterceptorTest {
 
         interceptor.intercept(record, consumer);
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isEqualTo(correlationId);
-        assertThat(MDC.get(LogContext.USER_ID)).isEqualTo("user-8");
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isEqualTo(correlationId);
+        assertThat(MDC.get(LogContext.MDC_USER_ID)).isEqualTo("user-8");
     }
 
     @Test
@@ -61,7 +61,7 @@ class KafkaConsumerInterceptorTest {
 
         interceptor.intercept(record, consumer);
 
-        String correlationId = MDC.get(LogContext.CORRELATION_ID);
+        String correlationId = MDC.get(LogContext.MDC_CORRELATION_ID);
         assertThat(correlationId).isNotNull();
         assertThat(LogContextManager.isValidCorrelationId(correlationId)).isTrue();
     }
@@ -76,7 +76,7 @@ class KafkaConsumerInterceptorTest {
 
         interceptor.success(record, consumer);
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
         assertThat(MDC.get("pre-existing")).isEqualTo("value");
     }
 
@@ -90,7 +90,7 @@ class KafkaConsumerInterceptorTest {
 
         interceptor.failure(record, new RuntimeException("fail"), consumer);
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
         assertThat(MDC.get("pre-existing")).isEqualTo("value");
     }
 
