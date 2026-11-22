@@ -4,6 +4,7 @@ public final class LogContext {
 
     private LogContext() {}
 
+    public static final String MDC_CONTEXT_KEY = "slf4j.mdc";
     public static final String MDC_CORRELATION_ID = "correlation_id";
     public static final String MDC_USER_ID = "user_id";
     public static final String MDC_SERVICE = "service";
