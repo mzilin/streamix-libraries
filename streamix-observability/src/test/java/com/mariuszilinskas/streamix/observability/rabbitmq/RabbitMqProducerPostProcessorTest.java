@@ -20,13 +20,14 @@ class RabbitMqProducerPostProcessorTest {
 
     @Test
     void writesMdcValuesToMessageHeaders() {
-        MDC.put(LogContext.CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-        MDC.put(LogContext.USER_ID, "user-3");
+        MDC.put(LogContext.MDC_CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        MDC.put(LogContext.MDC_USER_ID, "user-3");
 
         Message message = new Message(new byte[0], new MessageProperties());
         Message processed = postProcessor.postProcessMessage(message);
 
-        String correlationHeader = processed.getMessageProperties().getHeader(LogContext.CORRELATION_HEADER);
+        String correlationHeader = processed.getMessageProperties()
+                .getHeader(LogContext.CORRELATION_ID_HEADER);
         String userIdHeader = processed.getMessageProperties().getHeader(LogContext.USER_ID_HEADER);
 
         assertThat(correlationHeader).isEqualTo("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
@@ -38,7 +39,8 @@ class RabbitMqProducerPostProcessorTest {
         Message message = new Message(new byte[0], new MessageProperties());
         Message processed = postProcessor.postProcessMessage(message);
 
-        String correlationHeader = processed.getMessageProperties().getHeader(LogContext.CORRELATION_HEADER);
+        String correlationHeader = processed.getMessageProperties()
+                .getHeader(LogContext.CORRELATION_ID_HEADER);
         String userIdHeader = processed.getMessageProperties().getHeader(LogContext.USER_ID_HEADER);
 
         assertThat(correlationHeader).isNull();
@@ -47,7 +49,7 @@ class RabbitMqProducerPostProcessorTest {
 
     @Test
     void returnsOriginalMessageInstance() {
-        MDC.put(LogContext.CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        MDC.put(LogContext.MDC_CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
         Message message = new Message(new byte[0], new MessageProperties());
 
         assertThat(postProcessor.postProcessMessage(message)).isSameAs(message);

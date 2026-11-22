@@ -57,8 +57,8 @@ class StreamixObservabilityAutoConfigurationTest {
                     MockHttpServletResponse response = new MockHttpServletResponse();
 
                     filter.doFilter(request, response, (req, res) -> {
-                        assertThat(MDC.get(LogContext.SERVICE)).isEqualTo("users-service");
-                        assertThat(MDC.get(LogContext.ENVIRONMENT)).isEqualTo("dev");
+                        assertThat(MDC.get(LogContext.MDC_SERVICE)).isEqualTo("users-service");
+                        assertThat(MDC.get(LogContext.MDC_ENVIRONMENT)).isEqualTo("dev");
                     });
                 });
     }
@@ -68,13 +68,13 @@ class StreamixObservabilityAutoConfigurationTest {
         contextRunner.run(context -> {
             LoggingFilter filter = context.getBean(LoggingFilter.class);
             MockHttpServletRequest request = new MockHttpServletRequest();
-            request.addHeader(LogContext.CORRELATION_HEADER, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+            request.addHeader(LogContext.CORRELATION_ID_HEADER, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
             request.addHeader(LogContext.USER_ID_HEADER, "user-1");
             MockHttpServletResponse response = new MockHttpServletResponse();
 
             filter.doFilter(request, response, (req, res) -> {
-                assertThat(MDC.get(LogContext.CORRELATION_ID)).isEqualTo("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-                assertThat(MDC.get(LogContext.USER_ID)).isEqualTo("user-1");
+                assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isEqualTo("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+                assertThat(MDC.get(LogContext.MDC_USER_ID)).isEqualTo("user-1");
             });
         });
     }
@@ -88,9 +88,9 @@ class StreamixObservabilityAutoConfigurationTest {
 
             filter.doFilter(request, response, mock(FilterChain.class));
 
-            assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
-            assertThat(MDC.get(LogContext.SERVICE)).isNull();
-            assertThat(MDC.get(LogContext.ENVIRONMENT)).isNull();
+            assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
+            assertThat(MDC.get(LogContext.MDC_SERVICE)).isNull();
+            assertThat(MDC.get(LogContext.MDC_ENVIRONMENT)).isNull();
         });
     }
 }

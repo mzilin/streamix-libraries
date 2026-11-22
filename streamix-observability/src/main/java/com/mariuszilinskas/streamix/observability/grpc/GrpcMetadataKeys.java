@@ -7,7 +7,7 @@ final class GrpcMetadataKeys {
 
     static final Metadata.Key<String> CORRELATION_ID_KEY =
             Metadata.Key.of(
-                    LogContext.CORRELATION_HEADER,
+                    LogContext.CORRELATION_ID_HEADER,
                     Metadata.ASCII_STRING_MARSHALLER
             );
 

@@ -31,7 +31,7 @@ public final class RabbitMqConsumerInterceptor implements MethodInterceptor {
         if (message != null) {
             Map<String, Object> headers = message.getMessageProperties().getHeaders();
             correlationId = LogContextManager.resolveCorrelationId(
-                    headerAsString(headers.get(LogContext.CORRELATION_HEADER))
+                    headerAsString(headers.get(LogContext.CORRELATION_ID_HEADER))
             );
             userId = headerAsString(headers.get(LogContext.USER_ID_HEADER));
         } else {
@@ -41,10 +41,10 @@ public final class RabbitMqConsumerInterceptor implements MethodInterceptor {
         Map<String, String> previousContext = MDC.getCopyOfContextMap();
 
         try {
-            LogContextManager.put(LogContext.CORRELATION_ID, correlationId);
-            LogContextManager.put(LogContext.USER_ID, userId);
-            LogContextManager.put(LogContext.SERVICE, serviceName);
-            LogContextManager.put(LogContext.ENVIRONMENT, environment);
+            LogContextManager.put(LogContext.MDC_CORRELATION_ID, correlationId);
+            LogContextManager.put(LogContext.MDC_USER_ID, userId);
+            LogContextManager.put(LogContext.MDC_SERVICE, serviceName);
+            LogContextManager.put(LogContext.MDC_ENVIRONMENT, environment);
             return invocation.proceed();
         } finally {
             MDC.clear();

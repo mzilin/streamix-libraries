@@ -26,7 +26,7 @@ class LoggingFilterTest {
     void populatesAllMdcKeysOnRequest() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         String correlationId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
-        request.addHeader(LogContext.CORRELATION_HEADER, correlationId);
+        request.addHeader(LogContext.CORRELATION_ID_HEADER, correlationId);
         request.addHeader(LogContext.USER_ID_HEADER, "user-42");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -35,7 +35,7 @@ class LoggingFilterTest {
         filter.doFilter(request, response, chain);
 
         verify(chain).doFilter(request, response);
-        assertThat(response.getHeader(LogContext.CORRELATION_HEADER)).isEqualTo(correlationId);
+        assertThat(response.getHeader(LogContext.CORRELATION_ID_HEADER)).isEqualTo(correlationId);
     }
 
     @Test
@@ -46,7 +46,7 @@ class LoggingFilterTest {
 
         filter.doFilter(request, response, chain);
 
-        String echoed = response.getHeader(LogContext.CORRELATION_HEADER);
+        String echoed = response.getHeader(LogContext.CORRELATION_ID_HEADER);
         assertThat(echoed).isNotNull();
         assertThat(LogContextManager.isValidCorrelationId(echoed)).isTrue();
     }
@@ -54,13 +54,13 @@ class LoggingFilterTest {
     @Test
     void generatesCorrelationIdForInvalidUuid() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader(LogContext.CORRELATION_HEADER, "not-a-uuid");
+        request.addHeader(LogContext.CORRELATION_ID_HEADER, "not-a-uuid");
         MockHttpServletResponse response = new MockHttpServletResponse();
         FilterChain chain = mock(FilterChain.class);
 
         filter.doFilter(request, response, chain);
 
-        String echoed = response.getHeader(LogContext.CORRELATION_HEADER);
+        String echoed = response.getHeader(LogContext.CORRELATION_ID_HEADER);
         assertThat(echoed).isNotEqualTo("not-a-uuid");
         assertThat(LogContextManager.isValidCorrelationId(echoed)).isTrue();
     }
@@ -74,10 +74,10 @@ class LoggingFilterTest {
 
         filter.doFilter(request, response, chain);
 
-        assertThat(MDC.get(LogContext.CORRELATION_ID)).isNull();
-        assertThat(MDC.get(LogContext.USER_ID)).isNull();
-        assertThat(MDC.get(LogContext.SERVICE)).isNull();
-        assertThat(MDC.get(LogContext.ENVIRONMENT)).isNull();
+        assertThat(MDC.get(LogContext.MDC_CORRELATION_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_USER_ID)).isNull();
+        assertThat(MDC.get(LogContext.MDC_SERVICE)).isNull();
+        assertThat(MDC.get(LogContext.MDC_ENVIRONMENT)).isNull();
         assertThat(MDC.get("existing-key")).isEqualTo("existing-value");
     }
 }

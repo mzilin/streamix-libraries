@@ -40,8 +40,8 @@ class GrpcClientInterceptorTest {
     @Test
     @SuppressWarnings("unchecked")
     void writesMdcCorrelationIdToOutgoingMetadata() {
-        MDC.put(LogContext.CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-        MDC.put(LogContext.USER_ID, "user-7");
+        MDC.put(LogContext.MDC_CORRELATION_ID, "a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        MDC.put(LogContext.MDC_USER_ID, "user-7");
         when(channel.newCall(any(), any())).thenReturn(clientCall);
 
         MethodDescriptor<Object, Object> method = mock(MethodDescriptor.class);
